@@ -41,6 +41,7 @@ using namespace llvm;
 
 STATISTIC(NumCallsAnalyzed, "Number of call sites analyzed");
 
+// command-line argument 옵션 추가
 static cl::opt<int> InlineThreshold(
     "inline-threshold", cl::Hidden, cl::init(225), cl::ZeroOrMore,
     cl::desc("Control the amount of inlining to perform (default = 225)"));
@@ -1641,6 +1642,7 @@ InlineParams llvm::getInlineParams(int Threshold) {
   //  * the -inline-threshold flag.
   //  If the -inline-threshold flag is explicitly specified, that is used
   //  irrespective of anything else.
+  // inline threshold의 갯수가 0보다 크면 인자로 받은 threshold로 설정
   if (InlineThreshold.getNumOccurrences() > 0)
     Params.DefaultThreshold = InlineThreshold;
   else

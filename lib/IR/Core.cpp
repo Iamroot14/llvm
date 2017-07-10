@@ -3181,10 +3181,12 @@ LLVMPassRegistryRef LLVMGetGlobalPassRegistry(void) {
 
 /*===-- Pass Manager ------------------------------------------------------===*/
 
+// 왜 legacy인가?
 LLVMPassManagerRef LLVMCreatePassManager() {
   return wrap(new legacy::PassManager());
 }
 
+// 170707
 LLVMPassManagerRef LLVMCreateFunctionPassManagerForModule(LLVMModuleRef M) {
   return wrap(new legacy::FunctionPassManager(unwrap(M)));
 }

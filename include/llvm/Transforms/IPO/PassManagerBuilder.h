@@ -96,6 +96,7 @@ public:
     /// inserted after the inlining pass.
     EP_EnabledOnOptLevel0,
 
+    // 최적화 방식
     /// EP_Peephole - This extension point allows adding passes that perform
     /// peephole optimizations similar to the instruction combiner. These passes
     /// will be inserted after each instance of the instruction combiner pass.

@@ -46,6 +46,7 @@ protected:
 
 public:
   /// isConstructed - Return true if this object has not been created yet.
+  // 생성되었는지 체크
   bool isConstructed() const { return Ptr != nullptr; }
 
   void destroy() const;

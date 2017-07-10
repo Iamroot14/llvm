@@ -233,6 +233,7 @@ private:
   bool wasRun;
 public:
   static char ID;
+  // 부모 클래스의 생성자 호출
   explicit FunctionPassManagerImpl() :
     Pass(PT_PassManager, ID), PMDataManager(),
     PMTopLevelManager(new FPPassManager()), wasRun(false) {}
@@ -381,6 +382,7 @@ namespace legacy {
 // PassManagerImpl
 //
 
+// 낯익은 클래스
 /// PassManagerImpl manages MPPassManagers
 class PassManagerImpl : public Pass,
                         public PMDataManager,
@@ -1365,6 +1367,7 @@ bool BBPassManager::doFinalization(Function &F) {
 
 /// Create new Function pass manager
 FunctionPassManager::FunctionPassManager(Module *m) : M(m) {
+  // function manage의 생성자 호출
   FPM = new FunctionPassManagerImpl();
   // FPM is the top level manager.
   FPM->setTopLevelManager(FPM);

@@ -634,6 +634,7 @@ public:
   AnalysisManager &operator=(AnalysisManager &&) = default;
 
   /// \brief Returns true if the analysis manager has an empty results cache.
+  // passmanager의 empty 메소드
   bool empty() const {
     assert(AnalysisResults.empty() == AnalysisResultLists.empty() &&
            "The storage and index of analysis results disagree on how many "
@@ -646,6 +647,7 @@ public:
   /// This doesn't invalidate, but instead simply deletes, the relevant results.
   /// It is useful when the IR is being removed and we want to clear out all the
   /// memory pinned for it.
+  // 패스매니저의clear 메소드
   void clear(IRUnitT &IR) {
     if (DebugLogging)
       dbgs() << "Clearing all analysis results for: " << IR.getName() << "\n";

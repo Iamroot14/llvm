@@ -290,25 +290,29 @@ protected:
     LLVMRunPassManager(pass, Module);
     LLVMDisposePassManager(pass);
   }
-  
+ 
+// SetOptLevel 설정
   void buildAndRunOptPasses() {
     LLVMPassManagerBuilderRef passBuilder;
     
+    // passbuilder 초기화
     passBuilder = LLVMPassManagerBuilderCreate();
+    // opt level 2로 초기화
     LLVMPassManagerBuilderSetOptLevel(passBuilder, 2);
     LLVMPassManagerBuilderSetSizeLevel(passBuilder, 0);
-    
+
     LLVMPassManagerRef functionPasses =
       LLVMCreateFunctionPassManagerForModule(Module);
+    // legacy passmanager 생성
     LLVMPassManagerRef modulePasses =
       LLVMCreatePassManager();
-    
+
     LLVMPassManagerBuilderPopulateFunctionPassManager(passBuilder,
                                                       functionPasses);
     LLVMPassManagerBuilderPopulateModulePassManager(passBuilder, modulePasses);
-    
+
     LLVMPassManagerBuilderDispose(passBuilder);
-    
+
     LLVMInitializeFunctionPassManager(functionPasses);
     for (LLVMValueRef value = LLVMGetFirstFunction(Module);
          value; value = LLVMGetNextFunction(value))

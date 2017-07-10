@@ -86,6 +86,7 @@ class Pass {
   Pass(const Pass &) = delete;
 
 public:
+// Resolver, PassID, Kind 멤버변수 초기화
   explicit Pass(PassKind K, char &pid)
     : Resolver(nullptr), PassID(&pid), Kind(K) { }
   virtual ~Pass();

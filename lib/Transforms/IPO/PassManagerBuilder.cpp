@@ -156,6 +156,7 @@ static cl::opt<bool> EnableGVNSink(
     cl::desc("Enable the GVN sinking pass (default = off)"));
 
 PassManagerBuilder::PassManagerBuilder() {
+// 최적화 기본 레벨 = 2
     OptLevel = 2;
     SizeLevel = 0;
     LibraryInfo = nullptr;
@@ -185,12 +186,14 @@ PassManagerBuilder::~PassManagerBuilder() {
 }
 
 /// Set of global extensions, automatically added as part of the standard set.
+// extention point(상태값?)과 extension function의 pair??
 static ManagedStatic<SmallVector<std::pair<PassManagerBuilder::ExtensionPointTy,
    PassManagerBuilder::ExtensionFn>, 8> > GlobalExtensions;
 
 /// Check if GlobalExtensions is constructed and not empty.
 /// Since GlobalExtensions is a managed static, calling 'empty()' will trigger
 /// the construction of the object.
+// 비었는지 확인하는 메소드
 static bool GlobalExtensionsNotEmpty() {
   return GlobalExtensions.isConstructed() && !GlobalExtensions->empty();
 }
@@ -207,9 +210,12 @@ void PassManagerBuilder::addExtension(ExtensionPointTy Ty, ExtensionFn Fn) {
 
 void PassManagerBuilder::addExtensionsToPM(ExtensionPointTy ETy,
                                            legacy::PassManagerBase &PM) const {
+  // global extension이 있으면 
   if (GlobalExtensionsNotEmpty()) {
     for (auto &Ext : *GlobalExtensions) {
+    // 인자로 넘어온 extension과 동일하면
       if (Ext.first == ETy)
+      // second = ExtensionFn 이다. 즉 메소드가 호출됨
         Ext.second(*this, PM);
     }
   }
@@ -284,6 +290,7 @@ void PassManagerBuilder::addPGOInstrPasses(legacy::PassManagerBase &MPM) {
     // This should probably be lowered after performance testing.
     IP.HintThreshold = 325;
 
+    // MPM = 모듈 패스 매니저
     MPM.add(createFunctionInliningPass(IP));
     MPM.add(createSROAPass());
     MPM.add(createEarlyCSEPass());             // Catch trivial redundancies
@@ -721,10 +728,12 @@ void PassManagerBuilder::addLTOOptimizationPasses(legacy::PassManagerBase &PM) {
   // Apply whole-program devirtualization and virtual constant propagation.
   PM.add(createWholeProgramDevirtPass(ExportSummary, nullptr));
 
+  // 최적화 레벨 1일때는 여기까지 실행
   // That's all we need at opt level 1.
   if (OptLevel == 1)
     return;
 
+  // 최적화 2~ 이상은 여기부터
   // Now that we internalized some globals, see if we can hack on them!
   PM.add(createGlobalOptimizerPass());
   // Promote any localized global vars.
@@ -905,6 +914,7 @@ inline PassManagerBuilder *unwrap(LLVMPassManagerBuilderRef P) {
     return reinterpret_cast<PassManagerBuilder*>(P);
 }
 
+// LLVMPassManagerBuilderRef로 캐스팅 한다.
 inline LLVMPassManagerBuilderRef wrap(PassManagerBuilder *P) {
   return reinterpret_cast<LLVMPassManagerBuilderRef>(P);
 }
@@ -919,6 +929,7 @@ void LLVMPassManagerBuilderDispose(LLVMPassManagerBuilderRef PMB) {
   delete Builder;
 }
 
+// optlevel 멤버변수 설정
 void
 LLVMPassManagerBuilderSetOptLevel(LLVMPassManagerBuilderRef PMB,
                                   unsigned OptLevel) {
@@ -960,6 +971,7 @@ LLVMPassManagerBuilderUseInlinerWithThreshold(LLVMPassManagerBuilderRef PMB,
   Builder->Inliner = createFunctionInliningPass(Threshold);
 }
 
+// passmanager를 populate 하는 메소드 
 void
 LLVMPassManagerBuilderPopulateFunctionPassManager(LLVMPassManagerBuilderRef PMB,
                                                   LLVMPassManagerRef PM) {
