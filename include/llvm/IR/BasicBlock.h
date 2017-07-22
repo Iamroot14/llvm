@@ -105,6 +105,7 @@ public:
   }
 
   /// \brief Return the enclosing method, or null if none.
+  // bbl의 Parent를 반환하다.
   const Function *getParent() const { return Parent; }
         Function *getParent()       { return Parent; }
 

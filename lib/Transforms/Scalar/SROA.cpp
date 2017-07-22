@@ -4281,6 +4281,7 @@ PreservedAnalyses SROA::run(Function &F, FunctionAnalysisManager &AM) {
 ///
 /// This is in the llvm namespace purely to allow it to be a friend of the \c
 /// SROA pass.
+// SROA 약자 : Scalar Replacement Of Aggregates
 class llvm::sroa::SROALegacyPass : public FunctionPass {
   /// The SROA implementation.
   SROA Impl;
@@ -4289,6 +4290,7 @@ public:
   SROALegacyPass() : FunctionPass(ID) {
     initializeSROALegacyPassPass(*PassRegistry::getPassRegistry());
   }
+  // 실제 동작하는 method
   bool runOnFunction(Function &F) override {
     if (skipFunction(F))
       return false;

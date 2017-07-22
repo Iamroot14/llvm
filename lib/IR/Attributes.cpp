@@ -1199,6 +1199,8 @@ bool AttributeList::hasAttributes(unsigned Index) const {
   return getAttributes(Index).hasAttributes();
 }
 
+// function에 Attribute가 있으면
+// 해당 attribute가 set 되었는지
 bool AttributeList::hasFnAttribute(Attribute::AttrKind Kind) const {
   return pImpl && pImpl->hasFnAttribute(Kind);
 }

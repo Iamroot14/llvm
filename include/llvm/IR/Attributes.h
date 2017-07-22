@@ -67,6 +67,7 @@ public:
   ///                      an exception might pass by.
   /// uwtable + nounwind = Needs an entry because the ABI says so.
 
+ // enum 타입으로 kind list 생성
   enum AttrKind {
     // IR-Level Attributes
     None,                  ///< No attributes have been set

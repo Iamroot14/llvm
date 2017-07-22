@@ -339,15 +339,23 @@ void LoopPass::assignPassManager(PMStack &PMS,
   LPPM->add(this);
 }
 
+// loop를 skip해야하는지 체크하는 함수
 bool LoopPass::skipLoop(const Loop *L) const {
+  // 자료구조에서 function 자료구조를 받아온다.
+  // loop의 parent인 function을 받아온다.
   const Function *F = L->getHeader()->getParent();
+  // function이 없으면 리턴
   if (!F)
     return false;
   // Check the opt bisect limit.
+  // context > function
   LLVMContext &Context = F->getContext();
+  // 최대 갯수를 초과하지 않으면 ok
   if (!Context.getOptBisect().shouldRunPass(this, *L))
     return true;
   // Check for the OptimizeNone attribute.
+  //  /usr/include/llvm/IR/Attributes.inc
+  // OptimizeNone bit가 설정되었는지 체크한다.
   if (F->hasFnAttribute(Attribute::OptimizeNone)) {
     // FIXME: Report this to dbgs() only once per function.
     DEBUG(dbgs() << "Skipping pass '" << getPassName()

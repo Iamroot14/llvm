@@ -113,6 +113,7 @@ struct ForceFunctionAttrsLegacyPass : public ModulePass {
 };
 }
 
+// attribute 지시자를 강제해주는 함수
 char ForceFunctionAttrsLegacyPass::ID = 0;
 INITIALIZE_PASS(ForceFunctionAttrsLegacyPass, "forceattrs",
                 "Force set function attributes", false, false)

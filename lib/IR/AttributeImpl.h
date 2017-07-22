@@ -175,6 +175,8 @@ public:
   /// \brief Return the number of attributes this AttributeList contains.
   unsigned getNumAttributes() const { return NumAttrs; }
 
+  // Kind는 n번째 비트를 나타내는 enum 값이다.
+  // 해당 attribute가 사용가능한지 반환
   bool hasAttribute(Attribute::AttrKind Kind) const {
     return AvailableAttrs & ((uint64_t)1) << Kind;
   }

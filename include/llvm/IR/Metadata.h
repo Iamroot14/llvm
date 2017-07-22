@@ -1379,6 +1379,7 @@ public:
   void clearOperands();
 
   /// \brief Get the module that holds this named metadata collection.
+  // Parent를 반환하는 inline 함수
   inline Module *getParent() { return Parent; }
   inline const Module *getParent() const { return Parent; }
 

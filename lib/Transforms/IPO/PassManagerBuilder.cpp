@@ -210,7 +210,7 @@ void PassManagerBuilder::addExtension(ExtensionPointTy Ty, ExtensionFn Fn) {
 
 void PassManagerBuilder::addExtensionsToPM(ExtensionPointTy ETy,
                                            legacy::PassManagerBase &PM) const {
-  // global extension이 있으면 
+  // global extension이 있으면
   if (GlobalExtensionsNotEmpty()) {
     for (auto &Ext : *GlobalExtensions) {
     // 인자로 넘어온 extension과 동일하면
@@ -278,6 +278,7 @@ void PassManagerBuilder::addPGOInstrPasses(legacy::PassManagerBase &MPM) {
     return;
   // Perform the preinline and cleanup passes for O1 and above.
   // And avoid doing them if optimizing for size.
+  // 최적화 레벨이 0 이상일때 실행
   if (OptLevel > 0 && SizeLevel == 0 && !DisablePreInliner &&
       PGOSampleUse.empty()) {
     // Create preinline pass. We construct an InlineParams object and specify
@@ -317,6 +318,7 @@ void PassManagerBuilder::addPGOInstrPasses(legacy::PassManagerBase &MPM) {
     MPM.add(
         createPGOIndirectCallPromotionLegacyPass(false, !PGOSampleUse.empty()));
 }
+// 패스들을 등록해주는 함수
 void PassManagerBuilder::addFunctionSimplificationPasses(
     legacy::PassManagerBase &MPM) {
   // Start of function pass.
@@ -406,19 +408,24 @@ void PassManagerBuilder::addFunctionSimplificationPasses(
   addExtensionsToPM(EP_Peephole, MPM);
 }
 
+// 패스 추가 20170721
 void PassManagerBuilder::populateModulePassManager(
     legacy::PassManagerBase &MPM) {
+    // sample 프로필 파일의 내용이 있으면 프로필 관련 패스 추가
   if (!PGOSampleUse.empty()) {
     MPM.add(createPruneEHPass());
     MPM.add(createSampleProfileLoaderPass(PGOSampleUse));
   }
 
   // Allow forcing function attributes as a debugging and tuning aid.
+  // attribute 관련 함수
   MPM.add(createForceFunctionAttrsLegacyPass());
 
   // If all optimizations are disabled, just run the always-inline pass and,
   // if enabled, the function merging pass.
+  // 최적화 레벨이 0이라도 __attribute__((always_inline)) 와 같이 inline pass는 동작한다.
   if (OptLevel == 0) {
+  // PGO는 profile guided optimization 이다.
     addPGOInstrPasses(MPM);
     if (Inliner) {
       MPM.add(Inliner);
@@ -515,6 +522,7 @@ void PassManagerBuilder::populateModulePassManager(
   if (OptLevel > 2)
     MPM.add(createArgumentPromotionPass()); // Scalarize uninlined fn args
 
+  // extension들을 추가해주는 큰 함수
   addExtensionsToPM(EP_CGSCCOptimizerLate, MPM);
   addFunctionSimplificationPasses(MPM);
 
@@ -641,6 +649,7 @@ void PassManagerBuilder::populateModulePassManager(
   addInstructionCombiningPass(MPM);
 
   if (!DisableUnrollLoops) {
+  // 여기로 진입
     MPM.add(createLoopUnrollPass(OptLevel));    // Unroll small loops
 
     // LoopUnroll may generate some redundency to cleanup.
@@ -980,6 +989,7 @@ LLVMPassManagerBuilderPopulateFunctionPassManager(LLVMPassManagerBuilderRef PMB,
   Builder->populateFunctionPassManager(*FPM);
 }
 
+// 패스매니저에 등록하는 함수
 void
 LLVMPassManagerBuilderPopulateModulePassManager(LLVMPassManagerBuilderRef PMB,
                                                 LLVMPassManagerRef PM) {

@@ -99,6 +99,8 @@ public:
       ++D;
     return D;
   }
+  // 루프 header를 가져옴
+  // getParent 함수는 inst -> bbl -> loop(?) -> function 순으로 연결됨
   BlockT *getHeader() const { return Blocks.front(); }
   LoopT *getParentLoop() const { return ParentLoop; }
 
@@ -353,7 +355,8 @@ raw_ostream& operator<<(raw_ostream &OS, const LoopBase<BlockT, LoopT> &Loop) {
 // Implementation in LoopInfoImpl.h
 extern template class LoopBase<BasicBlock, Loop>;
 
-
+// SCC : https://en.wikipedia.org/wiki/Strongly_connected_component
+// loop 클래스는 단일 루프를 control flow graph로 나타낸 것이다.
 /// Represents a single loop in the control flow graph.  Note that not all SCCs
 /// in the CFG are necessarily loops.
 class Loop : public LoopBase<BasicBlock, Loop> {
@@ -674,6 +677,7 @@ public:
 // Implementation in LoopInfoImpl.h
 extern template class LoopInfoBase<BasicBlock, Loop>;
 
+// loopinfo 클래스
 class LoopInfo : public LoopInfoBase<BasicBlock, Loop> {
   typedef LoopInfoBase<BasicBlock, Loop> BaseT;
 

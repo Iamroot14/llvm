@@ -63,6 +63,7 @@ public:
   typedef std::function<void(const PassManagerBuilder &Builder,
                              legacy::PassManagerBase &PM)>
       ExtensionFn;
+      // 기본적으로 초기화 해주는 것들
   enum ExtensionPointTy {
     /// EP_EarlyAsPossible - This extension point allows adding passes before
     /// any other transformations, allowing them to see the code as it is coming

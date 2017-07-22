@@ -936,6 +936,7 @@ static bool tryToUnrollLoop(Loop *L, DominatorTree &DT, LoopInfo *LI,
                             Optional<bool> ProvidedAllowPartial,
                             Optional<bool> ProvidedRuntime,
                             Optional<bool> ProvidedUpperBound) {
+    // 디버깅 정보 출력
   DEBUG(dbgs() << "Loop Unroll: F[" << L->getHeader()->getParent()->getName()
                << "] Loop %" << L->getHeader()->getName() << "\n");
   if (HasUnrollDisablePragma(L)) 
@@ -1050,6 +1051,8 @@ namespace {
 class LoopUnroll : public LoopPass {
 public:
   static char ID; // Pass ID, replacement for typeid
+  // None = 0
+  // 생성자로 초기화
   LoopUnroll(int OptLevel = 2, Optional<unsigned> Threshold = None,
              Optional<unsigned> Count = None,
              Optional<bool> AllowPartial = None, Optional<bool> Runtime = None,
@@ -1068,11 +1071,13 @@ public:
   Optional<bool> ProvidedUpperBound;
 
   bool runOnLoop(Loop *L, LPPassManager &) override {
+  // loop를 skip해야 하는지 체크
     if (skipLoop(L))
       return false;
 
     Function &F = *L->getHeader()->getParent();
 
+    // DOM tree로 표현된 값을 가져온다.
     auto &DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
     LoopInfo *LI = &getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
     ScalarEvolution &SE = getAnalysis<ScalarEvolutionWrapperPass>().getSE();
@@ -1117,6 +1122,7 @@ Pass *llvm::createLoopUnrollPass(int OptLevel, int Threshold, int Count,
   // TODO: It would make more sense for this function to take the optionals
   // directly, but that's dangerous since it would silently break out of tree
   // callers.
+  // (level, None, None, Optional<bool>, .....)
   return new LoopUnroll(
       OptLevel, Threshold == -1 ? None : Optional<unsigned>(Threshold),
       Count == -1 ? None : Optional<unsigned>(Count),
@@ -1126,6 +1132,7 @@ Pass *llvm::createLoopUnrollPass(int OptLevel, int Threshold, int Count,
 }
 
 Pass *llvm::createSimpleLoopUnrollPass(int OptLevel) {
+// 최적화 레벨을 넘겨준다.
   return llvm::createLoopUnrollPass(OptLevel, -1, -1, 0, 0, 0);
 }
 

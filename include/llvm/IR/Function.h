@@ -584,6 +584,7 @@ public:
 
   size_t                   size() const { return BasicBlocks.size();  }
   bool                    empty() const { return BasicBlocks.empty(); }
+  // 베이직 블록의 반복자 정의
   const BasicBlock       &front() const { return BasicBlocks.front(); }
         BasicBlock       &front()       { return BasicBlocks.front(); }
   const BasicBlock        &back() const { return BasicBlocks.back();  }

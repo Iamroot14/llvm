@@ -25,6 +25,7 @@
 
 using namespace llvm;
 
+// -opt-bisect-limit=<limit> 최대 pass 갯수들 설정
 static cl::opt<int> OptBisectLimit("opt-bisect-limit", cl::Hidden,
                                    cl::init(INT_MAX), cl::Optional,
                                    cl::desc("Maximum optimization to perform"));
@@ -53,6 +54,7 @@ static std::string getDescription(const BasicBlock &BB) {
          BB.getParent()->getName().str() + ")";
 }
 
+// loop를 리턴
 static std::string getDescription(const Loop &L) {
   // FIXME: Move into LoopInfo so we can get a better description
   // (and avoid a circular dependency between IR and Analysis).
@@ -95,16 +97,19 @@ template bool OptBisect::shouldRunPass(const Pass *, const Region &);
 
 template <class UnitT>
 bool OptBisect::shouldRunPass(const Pass *P, const UnitT &U) {
+// BisectDisabled면 무조건 true를 리턴
   if (!BisectEnabled)
     return true;
   return checkPass(P->getPassName(), getDescription(U));
 }
 
+// 옵션으로 지정된 loop 한계 안쪽이면 unroll을 한다.
 bool OptBisect::checkPass(const StringRef PassName,
                           const StringRef TargetDesc) {
   assert(BisectEnabled);
 
   int CurBisectNum = ++LastBisectNum;
+  // 최대 pass 갯수를 초과하는지 체크한다.
   bool ShouldRun = (OptBisectLimit == -1 || CurBisectNum <= OptBisectLimit);
   printPassMessage(PassName, CurBisectNum, TargetDesc, ShouldRun);
   return ShouldRun;

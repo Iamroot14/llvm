@@ -241,6 +241,7 @@ public:
 
   /// runOnModule - Virtual method overriden by subclasses to process the module
   /// being operated on.
+  // 실제 최적화 동작을 하는 가상함수
   virtual bool runOnModule(Module &M) = 0;
 
   void assignPassManager(PMStack &PMS, PassManagerType T) override;

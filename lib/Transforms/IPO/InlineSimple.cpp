@@ -88,7 +88,9 @@ INITIALIZE_PASS_END(SimpleInliner, "inline", "Function Integration/Inlining",
 
 Pass *llvm::createFunctionInliningPass() { return new SimpleInliner(); }
 
+// inline pass를 생성
 Pass *llvm::createFunctionInliningPass(int Threshold) {
+// SimpleInliner 객체 생성
   return new SimpleInliner(llvm::getInlineParams(Threshold));
 }
 

@@ -213,6 +213,7 @@ template <class NodeT> class DominatorTreeBase {
   std::vector<NodeT *> Roots;
   bool IsPostDominators;
 
+// using으로 DomTreeNodeMapType를 정의
   using DomTreeNodeMapType =
      DenseMap<NodeT *, std::unique_ptr<DomTreeNodeBase<NodeT>>>;
   DomTreeNodeMapType DomTreeNodes;
@@ -634,6 +635,7 @@ public:
  protected:
   void addRoot(NodeT *BB) { this->Roots.push_back(BB); }
 
+  // domtree 초기화
   void reset() {
     DomTreeNodes.clear();
     this->Roots.clear();

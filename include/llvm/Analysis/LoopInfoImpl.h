@@ -147,6 +147,7 @@ BlockT *LoopBase<BlockT, LoopT>::getLoopPredecessor() const {
 /// A latch block is a block that contains a branch back to the header.
 template<class BlockT, class LoopT>
 BlockT *LoopBase<BlockT, LoopT>::getLoopLatch() const {
+// header를 가져옴
   BlockT *Header = getHeader();
   BlockT *Latch = nullptr;
   for (const auto Pred : children<Inverse<BlockT*>>(Header)) {
